@@ -5,9 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RS Soluções Digitais</title>
   <meta name="description" content="RS Soluções Digitais - soluções digitais personalizadas para empresas.">
+  <meta name="theme-color" content="#07060f">
+
+  <!-- Fontes da identidade RS: Sora (títulos), Manrope (leitura), IBM Plex Mono (rótulos) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="css/estilos.css">
+
+  <!-- Roda antes da página pintar. Faz duas coisas:
+
+       1. Marca que o JavaScript está ativo — sem isso, os blocos com
+          animação de entrada apareceriam e sumiriam.
+       2. Decide se a abertura toca. Ela toca UMA VEZ POR SESSÃO e nunca
+          com movimento reduzido: uma abertura de 2,6s na terceira visita
+          do dia deixa de ser assinatura e vira pedágio. -->
+  <script>
+    (function () {
+      var raiz = document.documentElement;
+      raiz.classList.add('js-ativo');
+
+      try {
+        var querMenos = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var jaViu = window.sessionStorage.getItem('rs-abertura') === '1';
+
+        if (!querMenos && !jaViu) {
+          raiz.classList.add('abertura-tocando');
+          window.sessionStorage.setItem('rs-abertura', '1');
+        }
+      } catch (erro) {
+        /* Armazenamento bloqueado: a abertura simplesmente não toca. */
+      }
+    })();
+  </script>
 </head>
 <body>
+
+  <!-- ============================================================
+       FUNDO
+       A grade cinética. Fica fixa atrás de todo o conteúdo, se
+       deforma na direção do ponteiro e solta uma onda a cada clique.
+       Quem desenha é o js/grade.js.
+       ============================================================ -->
+  <canvas class="grade-cinetica" id="grade-cinetica" aria-hidden="true"></canvas>
+
+  <!-- ============================================================
+       ABERTURA
+       Camada por cima do site, nunca um portão de conteúdo: se ela
+       não tocar, a página está inteira aí atrás.
+       ============================================================ -->
+  <div class="abertura" aria-hidden="true">
+    <div class="abertura-marca">
+      <span class="simbolo abertura-simbolo"></span>
+      <span class="abertura-nome">Soluções Digitais</span>
+      <span class="abertura-fio"></span>
+    </div>
+  </div>
 
   <!-- ============================================================
        CABEÇALHO
@@ -15,7 +69,11 @@
   <header class="cabecalho" id="topo">
     <div class="container cabecalho-conteudo">
 
-      <div class="logo">RS Soluções Digitais</div>
+      <a class="logo" href="#topo" style="text-decoration: none;"
+         aria-label="RS Soluções Digitais">
+        <span class="simbolo logo-simbolo" aria-hidden="true"></span>
+        <span class="logo-nome">Soluções Digitais</span>
+      </a>
 
       <nav class="menu">
         <ul class="menu-lista">
@@ -27,7 +85,11 @@
         </ul>
       </nav>
 
-      <a href="#contato" class="botao">Fale conosco</a>
+      <!-- Botão da marca: gradiente que desliza, lustro e seta que anda -->
+      <a href="#contato" class="botao botao-pequeno">
+        Fale conosco
+        <span class="botao-seta" aria-hidden="true">→</span>
+      </a>
 
     </div>
   </header>
@@ -36,20 +98,39 @@
        SEÇÃO INICIAL
        ============================================================ -->
   <section class="secao" id="inicio">
+
+    <!-- Atmosfera: manchas de luz da marca, muito borradas e em movimento lento -->
+    <div class="aurora aurora-amarela" aria-hidden="true"></div>
+    <div class="aurora aurora-ciano" aria-hidden="true"></div>
+
     <div class="container">
 
-      <h1 class="titulo-principal">Soluções digitais para o crescimento da sua empresa</h1>
+      <p class="rotulo revelar">Soluções digitais sob medida</p>
 
-      <p class="texto">
+      <h1 class="titulo-principal">
+        <span class="mascara"><span class="mascara-linha">Soluções digitais para o <span class="texto-rs">crescimento</span> da sua empresa</span></span>
+      </h1>
+
+      <p class="texto texto-destaque revelar">
         A RS Soluções Digitais desenvolve sites, automações e estratégias digitais para
         empresas que querem organizar seus processos e crescer de forma consistente.
         Trabalhamos com soluções simples, funcionais e adaptadas à realidade de cada negócio.
       </p>
 
-      <a href="#servicos" class="botao">Conheça nossos serviços</a>
+      <div class="acoes revelar">
+        <a href="#servicos" class="botao botao-grande">
+          Conheça nossos serviços
+          <span class="botao-seta" aria-hidden="true">→</span>
+        </a>
 
-      <!-- Bloco cinza no lugar da futura imagem principal -->
-      <div class="bloco-imagem bloco-imagem-grande">Imagem</div>
+        <a href="#projetos" class="botao botao-secundario botao-grande">
+          Ver projetos
+          <span class="botao-seta" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <!-- Bloco no lugar da futura imagem principal -->
+      <div class="bloco-imagem bloco-imagem-grande revelar">Imagem</div>
 
     </div>
   </section>
@@ -57,18 +138,20 @@
   <!-- ============================================================
        SERVIÇOS
        ============================================================ -->
-  <section class="secao" id="servicos">
+  <section class="secao campo-superficie" id="servicos">
     <div class="container">
 
-      <h2 class="titulo-secao">Serviços</h2>
-
-      <p class="texto">
-        Conheça as principais frentes de trabalho da RS Soluções Digitais.
-      </p>
+      <div class="secao-cabecalho revelar">
+        <p class="rotulo">01 — Serviços</p>
+        <h2 class="titulo-secao"><span class="mascara"><span class="mascara-linha brilho-titulo">O que a RS faz</span></span></h2>
+        <p class="texto">
+          Conheça as principais frentes de trabalho da RS Soluções Digitais.
+        </p>
+      </div>
 
       <div class="grade grade-4">
 
-        <div class="card">
+        <div class="card revelar">
           <h3 class="card-titulo">Desenvolvimento de sites</h3>
           <p class="card-texto">
             Criação de sites institucionais e páginas de vendas, com foco em clareza,
@@ -76,7 +159,7 @@
           </p>
         </div>
 
-        <div class="card">
+        <div class="card revelar">
           <h3 class="card-titulo">Automação de processos</h3>
           <p class="card-texto">
             Automatização de tarefas repetitivas e integração entre ferramentas para
@@ -84,7 +167,7 @@
           </p>
         </div>
 
-        <div class="card">
+        <div class="card revelar">
           <h3 class="card-titulo">Marketing digital</h3>
           <p class="card-texto">
             Planejamento e acompanhamento de campanhas, relatórios de resultados e
@@ -92,7 +175,7 @@
           </p>
         </div>
 
-        <div class="card">
+        <div class="card revelar">
           <h3 class="card-titulo">Soluções personalizadas</h3>
           <p class="card-texto">
             Projetos sob medida para necessidades específicas, criados a partir do que
@@ -108,17 +191,22 @@
        PROJETOS
        ============================================================ -->
   <section class="secao" id="projetos">
+
+    <div class="aurora aurora-azul" aria-hidden="true"></div>
+
     <div class="container">
 
-      <h2 class="titulo-secao">Projetos</h2>
-
-      <p class="texto">
-        Alguns exemplos de trabalhos realizados pela equipe.
-      </p>
+      <div class="secao-cabecalho revelar">
+        <p class="rotulo">02 — Projetos</p>
+        <h2 class="titulo-secao"><span class="mascara"><span class="mascara-linha brilho-titulo">Trabalhos entregues</span></span></h2>
+        <p class="texto">
+          Alguns exemplos de trabalhos realizados pela equipe.
+        </p>
+      </div>
 
       <div class="grade grade-4">
 
-        <div class="card">
+        <div class="card revelar">
           <div class="bloco-imagem">Imagem</div>
           <h3 class="card-titulo">Site institucional Alfa</h3>
           <p class="card-texto">
@@ -126,7 +214,7 @@
           </p>
         </div>
 
-        <div class="card">
+        <div class="card revelar">
           <div class="bloco-imagem">Imagem</div>
           <h3 class="card-titulo">Automação de atendimento Beta</h3>
           <p class="card-texto">
@@ -134,7 +222,7 @@
           </p>
         </div>
 
-        <div class="card">
+        <div class="card revelar">
           <div class="bloco-imagem">Imagem</div>
           <h3 class="card-titulo">Loja virtual Gama</h3>
           <p class="card-texto">
@@ -142,7 +230,7 @@
           </p>
         </div>
 
-        <div class="card">
+        <div class="card revelar">
           <div class="bloco-imagem">Imagem</div>
           <h3 class="card-titulo">Painel de indicadores Delta</h3>
           <p class="card-texto">
@@ -156,26 +244,30 @@
 
   <!-- ============================================================
        SOBRE A RS
+       Campo da marca: mais azul, mais presente. É onde a RS fala de si.
        ============================================================ -->
-  <section class="secao" id="sobre">
+  <section class="secao campo-marca" id="sobre">
     <div class="container">
 
-      <h2 class="titulo-secao">Sobre a RS</h2>
+      <div class="secao-cabecalho revelar">
+        <p class="rotulo">03 — Sobre</p>
+        <h2 class="titulo-secao"><span class="mascara"><span class="mascara-linha brilho-titulo">Quem é a RS</span></span></h2>
+      </div>
 
-      <p class="texto">
+      <p class="texto texto-destaque revelar">
         A RS Soluções Digitais é uma empresa que oferece soluções digitais personalizadas
         para ajudar outras empresas a crescerem e organizarem seus processos. Atuamos desde
         o entendimento da necessidade até a entrega e o acompanhamento do que foi construído,
         sempre buscando resultados práticos para o dia a dia do cliente.
       </p>
 
-      <p class="texto">
+      <p class="texto revelar">
         Nosso trabalho é feito de forma próxima, com linguagem simples e etapas claras, para
         que a empresa saiba exatamente o que está sendo desenvolvido.
       </p>
 
-      <!-- Bloco cinza no lugar de uma futura foto da equipe -->
-      <div class="bloco-imagem bloco-imagem-medio">Imagem</div>
+      <!-- Bloco no lugar de uma futura foto da equipe -->
+      <div class="bloco-imagem bloco-imagem-medio revelar">Imagem</div>
 
     </div>
   </section>
@@ -183,33 +275,36 @@
   <!-- ============================================================
        DEPOIMENTOS
        ============================================================ -->
-  <section class="secao" id="depoimentos">
+  <section class="secao campo-superficie" id="depoimentos">
     <div class="container">
 
-      <h2 class="titulo-secao">Depoimentos</h2>
+      <div class="secao-cabecalho revelar">
+        <p class="rotulo">04 — Depoimentos</p>
+        <h2 class="titulo-secao"><span class="mascara"><span class="mascara-linha brilho-titulo">O que dizem os clientes</span></span></h2>
+      </div>
 
       <div class="grade grade-3">
 
-        <div class="depoimento">
+        <div class="depoimento revelar">
           <p class="depoimento-texto">
-            "O site ficou pronto no prazo combinado e a comunicação foi clara do início
-            ao fim do projeto."
+            O site ficou pronto no prazo combinado e a comunicação foi clara do início
+            ao fim do projeto.
           </p>
           <p class="depoimento-autor">Ana Ribeiro - Comércio Alfa</p>
         </div>
 
-        <div class="depoimento">
+        <div class="depoimento revelar">
           <p class="depoimento-texto">
-            "A automação reduziu bastante o trabalho manual da nossa equipe e organizou
-            o atendimento."
+            A automação reduziu bastante o trabalho manual da nossa equipe e organizou
+            o atendimento.
           </p>
           <p class="depoimento-autor">Carlos Menezes - Distribuidora Beta</p>
         </div>
 
-        <div class="depoimento">
+        <div class="depoimento revelar">
           <p class="depoimento-texto">
-            "Conseguimos acompanhar os resultados das campanhas de um jeito muito mais
-            simples do que antes."
+            Conseguimos acompanhar os resultados das campanhas de um jeito muito mais
+            simples do que antes.
           </p>
           <p class="depoimento-autor">Fernanda Lopes - Loja Gama</p>
         </div>
@@ -222,16 +317,21 @@
        CONTATO
        ============================================================ -->
   <section class="secao" id="contato">
+
+    <div class="aurora aurora-ciano" aria-hidden="true"></div>
+
     <div class="container">
 
-      <h2 class="titulo-secao">Contato</h2>
-
-      <p class="texto">
-        Preencha o formulário abaixo e entraremos em contato.
-      </p>
+      <div class="secao-cabecalho revelar">
+        <p class="rotulo">05 — Contato</p>
+        <h2 class="titulo-secao"><span class="mascara"><span class="mascara-linha brilho-titulo">Vamos conversar</span></span></h2>
+        <p class="texto">
+          Preencha o formulário abaixo e entraremos em contato.
+        </p>
+      </div>
 
       <!-- Formulario apenas visual: nao envia dados para nenhum servidor -->
-      <form class="formulario" id="formulario-contato">
+      <form class="formulario revelar" id="formulario-contato">
 
         <div class="campo">
           <label for="nome">Nome</label>
@@ -253,11 +353,27 @@
           <textarea id="mensagem" name="mensagem" rows="5" placeholder="Escreva sua mensagem"></textarea>
         </div>
 
-        <button type="submit" class="botao">Enviar</button>
+        <button type="submit" class="botao">Enviar mensagem</button>
 
         <p class="formulario-aviso" id="mensagem-envio"></p>
 
       </form>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MARCA FINAL
+       Só o símbolo, sobre uma luz de fundo. Peça parada.
+       ============================================================ -->
+  <section class="marca-final" aria-label="RS Soluções Digitais">
+    <div class="container">
+
+      <div class="marca-palco">
+        <span class="simbolo marca-simbolo"></span>
+      </div>
+
+      <p class="rotulo marca-final-rotulo">Soluções digitais sob medida</p>
+
     </div>
   </section>
 
@@ -301,6 +417,7 @@
     </div>
   </footer>
 
+  <script src="js/grade.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
